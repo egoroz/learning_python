@@ -1,0 +1,87 @@
+#13 variant
+def task1(x,y):
+    return print(x**2+y**2)
+
+def task2(s):
+    a = ord('A')
+    z = ord('Z')
+    counter=0
+    for el in s:
+        if a <= ord(el) <= z:
+            counter+=1
+    return print(counter)
+
+def task3(s):
+    lenth = len(s)
+    if s[0:3] == 'Abo':
+        counter = 1
+    else:
+        counter = 0
+    i = 0
+    while i<lenth-3:
+        if s[i] == ' ' and s[i+1:i+4] == 'Abo':
+            counter+=1
+        i+=1
+    return counter
+    
+def task4(a):
+    b = list(filter(lambda x: x!= 'sus',a))
+    return print(b)
+    
+def task5(arr):
+    return print(arr[6:len(arr)-1:2])
+    
+def task6(arr1,arr2,arr3,arr4):
+    arr_1 = arr1+arr4
+    arr_2 = arr2+arr3
+    arr = []
+    for el in arr_1:
+        if el not in arr:
+            arr.append(el)
+        if el not in arr:
+            arr.append(el)
+            
+    return arr
+    
+def task7():
+    import numpy as np
+    np.random.seed(13)
+    arr = np.random.randint(0,25+1,25)
+    arr = arr.reshape((5,5))
+    minor_arr = arr[1:,:4]
+    det = np.linalg.det(minor_arr)
+    return(minor_arr,det)
+    import numpy as np
+import matplotlib
+from matplotlib import pyplot as plt
+
+def task8(f, min_x, max_x, N, min_y, max_y):
+    x = np.linspace(min_x,max_x,N)
+    y = f(x)
+    plt.yscale('log')
+    plt.grid(b=True, which='major', axis='both', alpha=1)
+    plt.grid(b=True, which='minor', axis='both', alpha=0.5)
+    plt.plot(x,y,'g-.')
+    plt.savefig('function.png')
+    plt.show()
+
+import pandas as pd
+import numpy as np
+
+
+
+def task12(df=pd.read_csv("video-games.csv")):
+    n_games = df['title'].nunique()
+    by_years = list(df[df['year'] == i]['year'].count() for i in range(2004,2008+1))
+    mean_price = df.groupby(["publisher"]).agg({"price": "mean"}).loc["EA"]
+    age_max_price = df.groupby(['age_raiting']).agg({'price':'max'})
+    mean_raiting_1_2 = df[(df['max_players']==1)|(df['max_players']==2)]['review_raiting'].mean()
+    n_games_by_age = df.groupby(['review_raiting']).count()['title']
+    a = list(map(str,df.publisher.unique()))
+    creators = []
+    for el in a:
+        c = el.split(',')
+        for elem in c:
+            if elem not in b:
+                creators.append(elem)
+    max_raiting_by_years = list(df[df['review_raiting'] == i]['title'] for i in (89,91,95,97,98))
