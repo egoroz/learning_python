@@ -29,8 +29,21 @@ polygon(screen, (0, 0, 0), [(100,100), (200,50),
 
 polygon(screen, (0, 0, 0), [(130,120), (170,140),
                             (170,130), (130,110)])
-polygon(screen, (0, 0, 0), [(130,120), (170,140),
-                            (170,130), (130,110)])
+polygon(screen, (0, 0, 0), [(310,100), (230,140),
+                            (230,130), (310,90)])
+
+x1 = 157; y1 = 190
+x2 = 250; y2 = 200
+N = 17
+color = (0, 0, 0)
+
+h = (x2 - x1) // (N+1)
+x = x1 + h
+for i in range(N):
+    line(screen, color, (x, y1), (x, y2))
+    x += h
+
+
 pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
