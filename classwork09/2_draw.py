@@ -17,7 +17,9 @@ for i in range(N):
     line(screen, color, (x, y1), (x, y2))
     x += h
 
+
 pygame.display.update()
+
 clock = pygame.time.Clock()
 finished = False
 
