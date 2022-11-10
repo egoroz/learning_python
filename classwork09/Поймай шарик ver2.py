@@ -3,11 +3,14 @@ from pygame.draw import *
 from random import randint
 
 pygame.init()
+pygame.font.init()
 
 FPS = 200
 x0 = 900
 y0 = 700
 screen = pygame.display.set_mode((x0, y0))
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
+text_surface = my_font.render('Ваш счёт:', False, (255, 255, 255))
 
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
@@ -85,9 +88,12 @@ while not finished:
             finished = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             x1, y1 = event.pos
-            if (x - x1)**2 + (y - y1)**2 <= r**2:
-                counter += 1
-                print(counter)
+            for ball in balls:
+                x, y , r = ball
+                if (x - x1)**2 + (y - y1)**2 <= r**2:
+                    counter += 1
+                    text_surface = my_font.render('Some Text', False, (0, 0, 0))
+
 
     screen.fill(BLACK)
     tick0 = pygame.time.get_ticks()
@@ -100,6 +106,7 @@ while not finished:
     show_balls(balls)
     balls = move_balls(balls, speeds)
     speeds = speed_balls(speeds, balls)
+    screen.blit(text_surface, (0, 0))
     pygame.display.update()
 
 pygame.quit()
