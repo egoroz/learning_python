@@ -110,7 +110,6 @@ tick3 = 0
 
 while not finished:
     clock.tick(FPS)
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finished = True
