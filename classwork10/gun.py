@@ -71,20 +71,20 @@ class Ball:
             return False
 
     def rebound(self):
-        if self.x + self.r >= 800:
-            self.x = 800 - self.r
+        if self.x + self.r >= 780:
+            self.x = 780 - self.r
             self.vx = -self.vx
 
-        if self.y + self.r >= 600:
-            self.y = 600 - self.r
+        if self.y + self.r >= 580:
+            self.y = 580 - self.r
             self.vy = -self.vy
 
-        if self.x + self.r <= 10:
+        if self.x - self.r <= 10:
             self.x = 10 + self.r
             self.vx = -self.vx
 
-        if self.y + self.r <= 10:
-            self.y = 10 + self.r
+        if self.y - self.r <= 20:
+            self.y = 20 + self.r
             self.vy = -self.vy
 
 
@@ -147,14 +147,15 @@ class Target():
     def __init__(self, screen):
         self.screen = screen
         self.points = 0
-        self.live = 1
         self.new_target()
 
     def new_target(self):
         """ Инициализация новой цели. """
         self.x = randint(600, 780)
         self.y = randint(300, 550)
-        self.r = randint(2, 500)
+        self.r = randint(20, 100)
+        self.vx = randint(-5, 5)
+        self.vy = randint(-5, 5)
         self.color = RED
         self.live = 1
 
@@ -165,6 +166,27 @@ class Target():
 
     def draw(self):
         pygame.draw.circle(self.screen, self.color, (self.x, self.y), self.r)
+
+    def move(self):
+        self.x += self.vx
+        self.y += self.vy
+
+    def rebound(self):
+        if self.x + self.r >= 780:
+            self.x = 780 - self.r
+            self.vx = -self.vx
+
+        if self.y + self.r >= 580:
+            self.y = 580 - self.r
+            self.vy = -self.vy
+
+        if self.x - self.r <= 10:
+            self.x = 10 + self.r
+            self.vx = -self.vx
+
+        if self.y - self.r <= 20:
+            self.y = 20 + self.r
+            self.vy = -self.vy
 
 
 pygame.init()
@@ -181,6 +203,8 @@ while not finished:
     screen.fill(WHITE)
     gun.draw()
     target.draw()
+    target.move()
+    target.rebound()
     for b in balls:
         b.draw()
     pygame.display.update()
