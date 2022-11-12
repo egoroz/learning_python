@@ -39,7 +39,7 @@ class Ball:
         self.vx = 0
         self.vy = 0
         self.color = choice(GAME_COLORS)
-        self.live = 30
+        self.live = 300
 
     def move(self):
         """Переместить мяч по прошествии единицы времени.
@@ -51,6 +51,24 @@ class Ball:
         self.vy -= 5
         self.x += self.vx
         self.y -= self.vy
+        if self.x + self.r >= 780:
+            self.x = 780 - self.r
+            self.vx = -self.vx
+
+        if self.y + self.r >= 580:
+            self.y = 580 - self.r
+            self.vy = -self.vy
+
+        if self.x - self.r <= 10:
+            self.x = 10 + self.r
+            self.vx = -self.vx
+
+        if self.y - self.r <= 20:
+            self.y = 20 + self.r
+            self.vy = -self.vy
+
+        self.live -= 1
+
 
     def draw(self):
         pygame.draw.circle(
@@ -73,22 +91,8 @@ class Ball:
         else:
             return False
 
-    def rebound(self):
-        if self.x + self.r >= 780:
-            self.x = 780 - self.r
-            self.vx = -self.vx
-
-        if self.y + self.r >= 580:
-            self.y = 580 - self.r
-            self.vy = -self.vy
-
-        if self.x - self.r <= 10:
-            self.x = 10 + self.r
-            self.vx = -self.vx
-
-        if self.y - self.r <= 20:
-            self.y = 20 + self.r
-            self.vy = -self.vy
+    def deleted(self):
+        del self
 
 
 class Gun:
@@ -133,8 +137,8 @@ class Gun:
 
     def draw(self):
         pygame.draw.line(self.screen, self.color, (20, 450),
-                         (20 + (10 + (self.f2_power)//1.5) * math.cos(self.an),
-                         450 + (10 + (self.f2_power)//1.5) * math.sin(self.an)),
+                         (20 + (10 + self.f2_power//1.5) * math.cos(self.an),
+                         450 + (10 + self.f2_power//1.5) * math.sin(self.an)),
                          7 + self.f2_power//30)
 
     def power_up(self):
@@ -165,7 +169,6 @@ class Target():
     def hit(self, points=1):
         """Попадание шарика в цель."""
         self.points += points
-
         del self
 
     def draw(self):
@@ -174,8 +177,6 @@ class Target():
     def move(self):
         self.x += self.vx
         self.y += self.vy
-
-    def rebound(self):
         if self.x + self.r >= 780:
             self.x = 780 - self.r
             self.vx = -self.vx
@@ -208,11 +209,11 @@ while not finished:
     gun.draw()
     target.draw()
     target.move()
-    target.rebound()
     text_surface = my_font.render(f'{target.points}', False, (0, 0, 0))
     screen.blit(text_surface, (10, 5))
     for b in balls:
         b.draw()
+
     pygame.display.update()
 
     clock.tick(FPS)
@@ -226,12 +227,15 @@ while not finished:
         elif event.type == pygame.MOUSEMOTION:
             gun.targetting(event)
 
-    for b in balls:
-        b.move()
-        b.rebound()
-        if b.hittest(target) and target.live:
+    i = 0
+    while i < len(balls):
+        balls[i].move()
+        if balls[i].hittest(target) and target.live:
             target.live = 0
             target.hit()
             target.new_target()
+        if balls[i].live == 0:
+            del balls[i]
+        i += 1
     gun.power_up()
 pygame.quit()
