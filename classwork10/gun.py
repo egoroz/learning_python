@@ -70,6 +70,23 @@ class Ball:
         else:
             return False
 
+    def rebound(self):
+        if self.x + self.r >= 800:
+            self.x = 800 - self.r
+            self.vx = -self.vx
+
+        if self.y + self.r >= 600:
+            self.y = 600 - self.r
+            self.vy = -self.vy
+
+        if self.x + self.r <= 10:
+            self.x = 10 + self.r
+            self.vx = -self.vx
+
+        if self.y + self.r <= 10:
+            self.y = 10 + self.r
+            self.vy = -self.vy
+
 
 class Gun:
     def __init__(self, screen):
@@ -77,7 +94,7 @@ class Gun:
         self.f2_power = 10
         self.f2_on = 0
         self.an = 1
-        self.color = GREY
+        self.color = BLACK
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -102,23 +119,28 @@ class Gun:
     def targetting(self, event):
         """Прицеливание. Зависит от положения мыши."""
         if event:
-            self.an = math.atan((event.pos[1]-450) / (event.pos[0]-20))
+            if event.pos[0] == 20:
+                self.an = -10000000000000000
+            else:
+                self.an = math.atan((event.pos[1]-450) / (event.pos[0]-20))
         if self.f2_on:
-            self.color = RED
+            self.color = YELLOW
         else:
-            self.color = GREY
+            self.color = BLACK
 
     def draw(self):
-        pygame.draw.line(self.screen, self.color,
-                         (20, 450), (20 + (10 + (self.f2_power)//1.5) * math.cos(self.an), 450 + (10 + (self.f2_power)//1.5) * math.sin(self.an)), 7 + self.f2_power//30)
+        pygame.draw.line(self.screen, self.color, (20, 450),
+                         (20 + (10 + (self.f2_power)//1.5) * math.cos(self.an),
+                         450 + (10 + (self.f2_power)//1.5) * math.sin(self.an)),
+                         7 + self.f2_power//30)
 
     def power_up(self):
         if self.f2_on:
             if self.f2_power < 100:
                 self.f2_power += 1
-            self.color = RED
+            self.color = YELLOW
         else:
-            self.color = GREY
+            self.color = BLACK
 
 
 class Target():
@@ -176,10 +198,10 @@ while not finished:
 
     for b in balls:
         b.move()
+        b.rebound()
         if b.hittest(target) and target.live:
             target.live = 0
             target.hit()
             target.new_target()
     gun.power_up()
-
 pygame.quit()
