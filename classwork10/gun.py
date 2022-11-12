@@ -6,6 +6,9 @@ import pygame
 
 FPS = 30
 
+pygame.font.init()
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
+
 RED = 0xFF0000
 BLUE = 0x0000FF
 YELLOW = 0xFFC91F
@@ -162,6 +165,7 @@ class Target():
     def hit(self, points=1):
         """Попадание шарика в цель."""
         self.points += points
+
         del self
 
     def draw(self):
@@ -205,6 +209,8 @@ while not finished:
     target.draw()
     target.move()
     target.rebound()
+    text_surface = my_font.render(f'{target.points}', False, (0, 0, 0))
+    screen.blit(text_surface, (10, 5))
     for b in balls:
         b.draw()
     pygame.display.update()
